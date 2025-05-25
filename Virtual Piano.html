@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Virtual Piano</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            background: url('C:/Users/Me/Downloads/WhatsApp Image 2025-01-21 at 8.58.52 PM.jpeg') no-repeat center center;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 20px 0 40px 0; /* Increased bottom margin */
+            text-align: center;
+            position: relative;
+            z-index: 1; /* Ensures title stays above piano */
+        }
+
+        .piano-container {
+            background: rgba(51, 51, 51, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            transform: scale(1.2);
+            position: relative;
+            z-index: 0; /* Places piano below the title */
+        }
+
+        .controls {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .octave-btn {
+            margin: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #444;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1rem;
+        }
+
+        .octave-btn:hover {
+            background: #555;
+        }
+
+        .octave-btn.active {
+            background: #DC143C;
+        }
+
+        .piano {
+            display: flex;
+            position: relative;
+        }
+
+        .key {
+            width: 80px;
+            height: 260px;
+            background: white;
+            border: 1px solid #333;
+            border-radius: 0 0 8px 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+            transition: background 0.1s;
+            margin: 0 2px;
+            font-size: 1.2rem;
+        }
+
+        .key:hover {
+            background: #eee;
+        }
+
+        .key:active, .key.active {
+            background: #ddd;
+            transform: translateY(2px);
+        }
+
+        .black-keys {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+        }
+
+        .black-key {
+            width: 48px;
+            height: 160px;
+            background: #FA2A55;
+            position: absolute;
+            border-radius: 0 0 5px 5px;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .black-key:hover {
+            background: #FA496C;
+        }
+
+        .black-key:active, .black-key.active {
+            background: #FA6783;
+            transform: translateY(2px);
+        }
+
+        .black-key:nth-child(1) { left: 52px; }
+        .black-key:nth-child(2) { left: 136px; }
+        .black-key:nth-child(3) { left: 304px; }
+        .black-key:nth-child(4) { left: 388px; }
+        .black-key:nth-child(5) { left: 472px; }
+        .black-key:nth-child(6) { left: 640px; }
+        .black-key:nth-child(7) { left: 724px; }
+    </style>
+</head>
+<body>
+    <h1>Virtual Piano</h1>
+    <div class="piano-container">
+        <div class="controls">
+            <button class="octave-btn active" data-octave="1">Octave 1</button>
+            <button class="octave-btn" data-octave="2">Octave 2</button>
+            <button class="octave-btn" data-octave="3">Octave 3</button>
+            <button class="octave-btn" data-octave="4">Octave 4</button>
+            <button class="octave-btn" data-octave="5">Octave 5</button>
+        </div>
+        <div class="piano">
+            <div class="black-keys">
+                <div class="black-key"></div>
+                <div class="black-key"></div>
+                <div class="black-key"></div>
+                <div class="black-key"></div>
+                <div class="black-key"></div>
+                <div class="black-key"></div>
+                <div class="black-key"></div>
+            </div>
+            <div class="key" data-note="261.626" data-key="1">C (1)</div>
+            <div class="key" data-note="293.665" data-key="2">D (2)</div>
+            <div class="key" data-note="329.698" data-key="3">E (3)</div>
+            <div class="key" data-note="349.228" data-key="4">F (4)</div>
+            <div class="key" data-note="391.995" data-key="5">G (5)</div>
+            <div class="key" data-note="440.000" data-key="6">A (6)</div>
+            <div class="key" data-note="493.883" data-key="7">B (7)</div>
+            <div class="key" data-note="523.251" data-key="8">C (8)</div>
+            <div class="key" data-note="587.330" data-key="9">D (9)</div>
+        </div>
+    </div>
+
+    <script>
+        // Function to play sound when a key is clicked
+        document.querySelectorAll('.key').forEach(function(key) {
+            key.addEventListener('click', function() {
+                var noteFrequency = this.getAttribute('data-note');
+                playSound(noteFrequency);
+            });
+        });
+
+        // Function to generate audio based on frequency
+        function playSound(frequency) {
+            var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            var oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime); // Frequency of the note
+            oscillator.connect(audioContext.destination);
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 1); // Stop after 1 second
+        }
+    </script>
+</body>
+</html>
